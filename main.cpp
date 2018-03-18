@@ -3,8 +3,14 @@
 
 using namespace std;
 
-int main()
-{
+#include "environment.h"
+
+int main() {
+	sf::RenderWindow window( sf::VideoMode( 315, 315 ), "");
+	Environment environment(&window);
+	environment.start();
+	
+	
 	Matrix X(10,10);
 	Matrix U(10,10);
 	Matrix A(10,10);
@@ -55,4 +61,7 @@ int main()
 	cout << factored[i].to_string() << endl;
 	i++;
 	cout << factored[i].to_string() << endl;
+	
+	
+	return 0;
 }

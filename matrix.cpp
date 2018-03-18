@@ -28,10 +28,9 @@ Matrix::~Matrix()
 
 //Matrix Matrix::operator+(const Matrix& operand) const
 //POSTCONDITIONS: The sum of two matrices is returned.
-Matrix Matrix::operator+(const Matrix& operand) const
+Matrix Matrix::operator+(const Matrix& operand)
 {
-	//Condition check for a matrix of the same size
-	assert(operand.width == this->width && operand.height == this->height);
+	init(operand.width, operand.height);
 	
 	Matrix result(this->width, this->height);
 	

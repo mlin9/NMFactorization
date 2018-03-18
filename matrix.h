@@ -24,7 +24,7 @@ class Matrix
 		Matrix operator-(const Matrix&) const;
 		Matrix operator*(const Matrix&) const;
 		Matrix operator/(const Matrix&) const;
-		void operator=(const Matrix&) const;
+		void operator=(const Matrix&);
 		//PUBLIC FUNCTIONS
 		void init(int input_width, int input_height);
 		void init(double input);

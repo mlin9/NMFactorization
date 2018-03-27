@@ -28,9 +28,10 @@ Matrix::~Matrix()
 
 //Matrix Matrix::operator+(const Matrix& operand) const
 //POSTCONDITIONS: The sum of two matrices is returned.
-Matrix Matrix::operator+(const Matrix& operand)
+Matrix Matrix::operator+(const Matrix& operand) const
 {
-	init(operand.width, operand.height);
+	//Condition check for a matrix of the same size
+	assert(operand.width == this->width && operand.height == this->height);
 	
 	Matrix result(this->width, this->height);
 	
@@ -107,10 +108,10 @@ Matrix Matrix::operator/(const Matrix& operand) const
 
 //Matrix Matrix::operator=(const Matrix& operand) const
 //POSTCONDITIONS: Changes the values of this matrix to operand matrix.
-void Matrix::operator=(const Matrix& operand) const
+void Matrix::operator=(const Matrix& operand)
 {
-	//Condition check for a matrix of the same size
-	assert(operand.width == this->width && operand.height == this->height);
+	if(operand.width * operand.height != this->width * this->height)
+		init(operand.width, operand.height);
 	
 	for(int y = 0; y < height; y++)
 	{
@@ -135,6 +136,7 @@ void Matrix::init(int input_width, int input_height)
 	for(int i = 0; i < input_width; i++)
 	    matrix[i] = new double[input_height];
 }
+
 //void Matrix::init(int_input)
 //PRECONDITIONS: matrix[width][height] is declared.
 //POSTCONDITIONS: matrix[x][y] is initialized to double input.
@@ -145,6 +147,23 @@ void Matrix::init(double input)
 		for(int x = 0; x < width; x++)
 		{
 			matrix[x][y] = input;
+		}
+	}
+}
+
+//void Matrix::clone(Matrix input)
+//PRECONDITIONS: matrix[width][height] is declared.
+//POSTCONDITIONS: matrix[x][y] is initialized to input matrix.
+void Matrix::clone(Matrix &input)
+{
+	if(input.width * input.height != width * height)
+		init(input.width, input.height);
+	
+	for(int y = 0; y < height; y++)
+	{
+		for(int x = 0; x < width; x++)
+		{
+			matrix[x][y] = input.matrix[x][y];
 		}
 	}
 }
@@ -193,6 +212,7 @@ double frobenius(Matrix &A)
 	return sqrt(result);
 }
 
+/*
 //vector<Matrix> NMFactorize(Matrix &A, int k, int factor)
 //PRECONDITIONS: 0 < k < A.width and 0 < k < A.height
 //POSTCONDITIONS: Factor matrices X and Y are returned.
@@ -222,21 +242,42 @@ vector<Matrix> NMFactorize(Matrix &A, int k, int factor)
 	
 	return XYMatrices;
 }
+*/
 
-Matrix NMMultiply(Matrix &X, Matrix &Y)
+Matrix NMMultiply(Matrix &U, Matrix &A)
 {
-	int width = max(X.width, Y.width);
-	int height = max(X.height, Y.height);
+	assert(min(U.width, U.height) == min(A.width, A.height));
 	
+	int m = max(U.width, A.width);
+	int n = max(U.height, A.height);
+	int k = min(U.width, U.height);
+	
+	if(U.width < U.height && A.width > A.height)
+	{
+		Matrix temp = U;
+		U = A;
+		A = temp;
+	}
+	
+	Matrix result(m,n);
 	double buffer;
 	
-	for(int y = 0; y < height; y++)
-	{
-		for(int x = 0; x < width; x++)
+	for(int ucol = 0; ucol < m; ucol++)
+	{	
+		for(int arow = 0; arow < n; arow++)
 		{
+			buffer = 0;
 			
+			for(int index = 0; index < k; index++)
+			{
+				buffer += U.matrix[ucol][index] * A.matrix[index][arow];
+			}
+			
+			result.matrix[ucol][arow] = buffer;
 		}
 	}
 	
+	return result;
 }
+
 /***** END EXTERNAL FUNCTIONS *****/

@@ -28,6 +28,7 @@ class Matrix
 		//PUBLIC FUNCTIONS
 		void init(int input_width, int input_height);
 		void init(double input);
+		void clone(Matrix &input);
 		string to_string();
 		int width;
 		int height;
@@ -37,6 +38,7 @@ class Matrix
 //EXTERNAL FUNCTIONS
 double frobenius(Matrix &A);
 vector<Matrix> NMFactorize(Matrix &A, int k, int factor);
-Matrix NMMultiply(Matrix &X, Matrix &Y);
+Matrix NMMultiply(Matrix &U, Matrix &A);
+Matrix BasisMatrix(Matrix &A);
 
 #endif
